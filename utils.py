@@ -82,7 +82,7 @@ class Logger:
 
 def notifyBayartsogt(message, slack_api_key, from_, platform="colab"):
     """
-    ! curl -X POST -H 'Content-type: application/json' --data '{"text":"@Bayartsogt see this one!!"}' https://hooks.slack.com/services/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
+    ! curl -X POST -H 'Content-type: application/json' --data '{"text":"@Bayartsogt see this one!!"}' https://hook_url
 
     platform = "colab"
     from_ = "create_32k"
