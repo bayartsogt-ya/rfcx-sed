@@ -251,8 +251,7 @@ def train_fold(args):
             early_stop_count += 1
 
         if args.early_stop == early_stop_count:
-            logger.log("\n $$$ ---? Ohoo.... we reached early stoping count :",
-                       early_stop_count)
+            logger.log(f"\n $$$ ---? Ohoo.... we reached early stoping count : {early_stop_count}")
             break
 
     model.load_state_dict(torch.load(os.path.join(
