@@ -13,4 +13,9 @@ if __name__ == '__main__':
     args = module.args()
 
     create_fold(args.data_dir, n_folds=args.n_folds, seed=args.seed)
+
+    print("-" * 20)
+    print("FOLD", args.fold)
+    print("-" * 20)
+
     train_fold(args=args)

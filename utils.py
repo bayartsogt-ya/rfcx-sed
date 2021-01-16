@@ -73,5 +73,5 @@ class Logger:
 
     def log(self, content):
         with open(self.path, 'a') as appender:
-            print(content + '\n')
-            appender.write(content + '\n')
+            print(content)
+            appender.write(content)
