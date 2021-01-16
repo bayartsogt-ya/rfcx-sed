@@ -1,0 +1,9 @@
+flake8
+autopep8
+pandas
+torch
+scikit-learn
+tqdm
+catalyst
+torchvision
+torchlibrosa
