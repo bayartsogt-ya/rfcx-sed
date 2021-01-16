@@ -9,7 +9,7 @@ from tqdm import tqdm
 from sklearn.model_selection import StratifiedKFold
 from iterstrat.ml_stratifiers import MultilabelStratifiedKFold
 
-from utils import AverageMeter, MetricMeter, seed_everithing
+from utils import AverageMeter, MetricMeter, seed_everithing, Logger
 from datasets import SedDataset
 from models import AudioSEDModel
 from model_helpers import Mixup, do_mixup
@@ -130,6 +130,8 @@ def train_fold(args):
     args.save_path = os.path.join(args.output_dir, args.exp_name)
     os.makedirs(args.save_path, exist_ok=True)
 
+    logger = Logger(f'{args.save_path}/log_fold_{args.fold}.txt')
+
     train_df = pd.read_csv(args.train_csv)
     sub_df = pd.read_csv(args.sub_csv)
     if args.DEBUG:
@@ -235,13 +237,10 @@ def train_fold(args):
             Train Loss:{train_loss:0.4f} - LWLRAP:{train_avg['lwlrap']:0.4f}
             Valid Loss:{valid_loss:0.4f} - LWLRAP:{valid_avg['lwlrap']:0.4f}
         """
-        print(content)
-        with open(f'{args.save_path}/log_fold_{args.fold}.txt',
-                  'a') as appender:
-            appender.write(content + '\n')
 
+        logger.log(content + '\n')
         if valid_avg['lwlrap'] > best_lwlrap:
-            print(
+            logger.log(
                 f"########## >>>>>>>> Model Improved From {best_lwlrap} ----> {valid_avg['lwlrap']}")
             torch.save(model.state_dict(), os.path.join(
                 args.save_path, f'fold-{args.fold}.bin'))
@@ -251,8 +250,8 @@ def train_fold(args):
             early_stop_count += 1
 
         if args.early_stop == early_stop_count:
-            print("\n $$$ ---? Ohoo.... we reached early stoping count :",
-                  early_stop_count)
+            logger.log("\n $$$ ---? Ohoo.... we reached early stoping count :",
+                       early_stop_count)
             break
 
     model.load_state_dict(torch.load(os.path.join(
@@ -269,4 +268,6 @@ def train_fold(args):
     test_pred_df[target_cols] = test_pred
     test_pred_df.to_csv(os.path.join(
         args.save_path, f"fold-{args.fold}-submission.csv"), index=False)
-    print(os.path.join(args.save_path, f"fold-{args.fold}-submission.csv"))
+
+    logger.log(os.path.join(args.save_path,
+                            f"fold-{args.fold}-submission.csv"))

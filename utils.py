@@ -65,3 +65,13 @@ def seed_everithing(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     torch.backends.cudnn.deterministic = True
+
+
+class Logger:
+    def __init__(self, path):
+        self.path = path
+
+    def log(self, content):
+        with open(self.path, 'a') as appender:
+            print(content + '\n')
+            appender.write(content + '\n')
