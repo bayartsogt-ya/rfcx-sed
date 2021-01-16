@@ -5,6 +5,9 @@ import numpy as np
 import torch
 from sklearn import metrics
 
+import json
+import requests
+
 
 def _lwlrap_sklearn(truth, scores):
     """Reference implementation from
@@ -75,3 +78,23 @@ class Logger:
         with open(self.path, 'a') as appender:
             print(content)
             appender.write(content)
+
+
+def notifyBayartsogt(message, slack_api_key, from_, platform="colab"):
+    """
+    ! curl -X POST -H 'Content-type: application/json' --data '{"text":"@Bayartsogt see this one!!"}' https://hooks.slack.com/services/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
+
+    platform = "colab"
+    from_ = "create_32k"
+    message = "initing the notebook"
+    notifyBayartsogt(platform, from_, message)
+    """
+
+    text = f"""
+    | {platform} | {from_}
+    |--- {message}
+    """
+
+    data = json.dumps({"text": text})
+    # , headers={'Content-type: application/json'})
+    return requests.post(slack_api_key, data=data).text

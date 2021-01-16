@@ -9,7 +9,7 @@ from tqdm import tqdm
 from sklearn.model_selection import StratifiedKFold
 from iterstrat.ml_stratifiers import MultilabelStratifiedKFold
 
-from utils import AverageMeter, MetricMeter, seed_everithing, Logger
+from utils import AverageMeter, MetricMeter, seed_everithing, Logger, notifyBayartsogt
 from datasets import SedDataset
 from models import AudioSEDModel
 from model_helpers import Mixup, do_mixup
@@ -271,3 +271,5 @@ def train_fold(args):
 
     logger.log(os.path.join(args.save_path,
                             f"fold-{args.fold}-submission.csv"))
+
+    notifyBayartsogt(**args.slack_param)

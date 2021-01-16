@@ -7,10 +7,19 @@ if __name__ == '__main__':
     parser = ArgumentParser(parents=[])
 
     parser.add_argument('--args', type=str)
+    parser.add_argument('--message', type=str)
+    parser.add_argument('--slack_api_key', type=str)
+    parser.add_argument('--from_', type=str)
     params = parser.parse_args()
 
     module = importlib.import_module(params.args, package=None)
     args = module.args()
+
+    args.slack_param = {
+        "message": params.message,
+        "slack_api_key": params.slack_api_key,
+        "from_": params.from_,
+    }
 
     create_fold(args.data_dir, n_folds=args.n_folds, seed=args.seed)
 
