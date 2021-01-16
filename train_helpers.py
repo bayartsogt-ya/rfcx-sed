@@ -130,6 +130,7 @@ def train_fold(args):
     args.save_path = os.path.join(args.output_dir, args.exp_name)
     os.makedirs(args.save_path, exist_ok=True)
 
+    notifyBayartsogt(**args.slack_param)
     logger = Logger(f'{args.save_path}/log_fold_{args.fold}.txt')
 
     train_df = pd.read_csv(args.train_csv)
