@@ -24,6 +24,7 @@ class args:
 
     loss_param = {
         "output_key": "clipwise_output",
+        "framewise_output_key": "segmentwise_output",
         "weights": [1, 0.5],
     }
     n_folds = 5
