@@ -8,7 +8,7 @@ from timm.models import densenet121
 from torchlibrosa.augmentation import SpecAugmentation
 from torchlibrosa.stft import LogmelFilterBank, Spectrogram
 
-from model_helpers import (AttBlock, do_mixup, init_bn, init_layer,
+from model_helpers import (AttBlock, AttBlockV2, do_mixup, init_bn, init_layer,
                            interpolate, pad_framewise_output)
 
 encoder_params = {
@@ -28,7 +28,7 @@ encoder_params = {
 
 class AudioSEDModel(nn.Module):
     def __init__(self, encoder, sample_rate, window_size, hop_size,
-                 mel_bins, fmin, fmax, classes_num):
+                 mel_bins, fmin, fmax, classes_num, att_version=1):
         super().__init__()
 
         window = 'hann'
@@ -57,7 +57,12 @@ class AudioSEDModel(nn.Module):
         self.encoder = encoder_params[encoder]["init_op"]()
         self.fc1 = nn.Linear(
             encoder_params[encoder]["features"], 1024, bias=True)
-        self.att_block = AttBlock(1024, classes_num, activation="sigmoid")
+
+        if att_version == 1:
+            self.att_block = AttBlock(1024, classes_num, activation="sigmoid")
+        else:
+            self.att_block = AttBlockV2(1024, classes_num, activation="sigmoid")
+
         self.bn0 = nn.BatchNorm2d(mel_bins)
         self.init_weight()
 
