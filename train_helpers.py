@@ -112,8 +112,9 @@ def test_epoch(args, model, loader):
             input = input.reshape(bs * seq, w)
             id = sample["id"]
             output = model(input)
-            output = torch.sigmoid(
-                torch.max(output['framewise_output'], dim=1)[0])
+            # output = torch.sigmoid(
+            #     torch.max(output['framewise_output'], dim=1)[0])
+            output = torch.max(output['framewise_output'], dim=1)[0]
             output = output.reshape(bs, seq, -1)
             # output = torch.sum(output, dim=1)
             output, _ = torch.max(output, dim=1)
