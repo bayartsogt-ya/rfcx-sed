@@ -57,6 +57,8 @@ class args:
     train_audio_transform = AA.Compose([
         AA.AddGaussianNoise(p=0.2),
         AA.AddGaussianSNR(p=0.2),
+        AA.Gain(min_gain_in_db=-15, max_gain_in_db=15, p=0.3),
+
         AA.AddBackgroundNoise(pinknoise, p=0.2),
         AA.AddShortNoises(pinknoise, min_time_between_sounds=0.0,
                           max_time_between_sounds=15.0, burst_probability=0.5, p=0.6),
@@ -65,12 +67,15 @@ class args:
         #                  max_frequency_band=0.2,
         #                  p=0.1),
         # AA.TimeMask(min_band_part=0.0, max_band_part=0.2, p=0.1),
-        # AA.PitchShift(min_semitones=-0.5, max_semitones=0.5, p=0.1),
+        AA.PitchShift(min_semitones=-0.5, max_semitones=0.5, p=0.1),
         # AA.Shift(p=0.1),
         # AA.Normalize(p=0.1),
         # AA.ClippingDistortion(min_percentile_threshold=0,
         #                       max_percentile_threshold=1,
         #                       p=0.05),
         # AA.PolarityInversion(p=0.05),
-        AA.Gain(min_gain_in_db=-15, max_gain_in_db=15, p=0.3),
+
+        AA.AddGaussianNoise(p=0.2),
+        AA.AddGaussianSNR(p=0.2),
+        AA.Gain(min_gain_in_db=-15, max_gain_in_db=15, p=0.3)
     ])
