@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from timm.models.efficientnet import tf_efficientnet_b0_ns
+from timm.models import densenet121
 from torchlibrosa.augmentation import SpecAugmentation
 from torchlibrosa.stft import LogmelFilterBank, Spectrogram
 
@@ -16,7 +17,13 @@ encoder_params = {
         "init_op": partial(tf_efficientnet_b0_ns,
                            pretrained=True,
                            drop_path_rate=0.2)
-    }
+    },
+    "densenet121": {
+        "features": 1024,
+        "init_op": partial(densenet121,
+                           pretrained=True,
+                           drop_path_rate=0.2)
+    },
 }
 
 

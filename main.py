@@ -7,6 +7,7 @@ if __name__ == '__main__':
     parser = ArgumentParser(parents=[])
 
     parser.add_argument('--args', type=str)
+    parser.add_argument('--fold', default=0, type=int)
     parser.add_argument('--message', type=str)
     parser.add_argument('--slack_api_key', type=str)
     parser.add_argument('--from_', type=str)
@@ -20,6 +21,7 @@ if __name__ == '__main__':
         "slack_api_key": params.slack_api_key,
         "from_": params.from_,
     }
+    args.fold = params.fold
 
     create_fold(args.data_dir, n_folds=args.n_folds, seed=args.seed)
 
