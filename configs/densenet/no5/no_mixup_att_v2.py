@@ -36,7 +36,7 @@ class args:
     lr = 1e-3
     batch_size = 28
     num_workers = 2
-    early_stop = 20
+    early_stop = 15
     step_scheduler = True
     epoch_scheduler = False
 

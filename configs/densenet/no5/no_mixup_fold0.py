@@ -18,7 +18,8 @@ class args:
         'mel_bins': 128,  # 60
         'fmin': 20,
         'fmax': 48000 // 2,
-        'classes_num': 24
+        'classes_num': 24,
+        'att_version': 1
     }
 
     loss_param = {
@@ -35,7 +36,7 @@ class args:
     lr = 1e-3
     batch_size = 28
     num_workers = 2
-    early_stop = 20
+    early_stop = 15
     step_scheduler = True
     epoch_scheduler = False
 
