@@ -21,8 +21,7 @@ encoder_params = {
     "densenet121": {
         "features": 1024,
         "init_op": partial(densenet121,
-                           pretrained=True,
-                           drop_path_rate=0.2)
+                           pretrained=True)
     },
 }
 
