@@ -1,3 +1,4 @@
+import math
 import numpy as np
 import soundfile as sf
 
@@ -66,9 +67,14 @@ class SedDataset:
         else:
             i = 0
             effective_length = self.period * sr
-            stride = self.stride * sr
-            y = np.stack([y[i: i + effective_length].astype(np.float32)
-                          for i in range(0, 60 * sr + stride - effective_length, stride)])
+            # stride = self.stride * sr
+
+            # y = np.stack([y[i: i + effective_length].astype(np.float32)
+            #               for i in range(0, 60 * sr + stride - effective_length, stride)])
+
+            y = np.stack([y[i * effective_length: (i + 1) * effective_length].astype(np.float32)
+                          for i in range(0, math.ceil(60 / self.period))])
+
             label = np.zeros(24, dtype='f')
             if self.mode == "valid":
                 for i in record['species_id']:
