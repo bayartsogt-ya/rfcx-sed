@@ -29,6 +29,7 @@ class args:
     fold = 0  # current train fold
 
     period = 10
+    test_period = 30
     seed = 42
     start_epcoh = 0
     epochs = 200
