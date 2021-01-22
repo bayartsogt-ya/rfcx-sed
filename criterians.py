@@ -93,18 +93,22 @@ class ImprovedPANNsLoss(nn.Module):
 
 
 class ImprovedFocalLoss(nn.Module):
-    def __init__(self, weights=[1, 1]):
+    def __init__(self, output_key="logit",
+                 framewise_output_key="framewise_output",
+                 weights=[1, 1]):
         super().__init__()
 
+        self.output_key = output_key
+        self.framewise_output_key = framewise_output_key
         # self.focal = FocalLoss()
         self.focal = SimplerFocalLoss()
         self.weights = weights
 
     def forward(self, input, target):
-        input_ = input["logit"]
+        input_ = input[self.output_key]
         target = target.float()
 
-        framewise_output = input["framewise_logit"]
+        framewise_output = input[self.framewise_output_key]
         clipwise_output_with_max, _ = framewise_output.max(dim=1)
 
         normal_loss = self.focal(input_, target)
