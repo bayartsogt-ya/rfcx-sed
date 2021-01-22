@@ -13,7 +13,7 @@ from utils import AverageMeter, MetricMeter, seed_everithing, Logger, notifyBaya
 from datasets import SedDataset
 from models import AudioSEDModel
 from model_helpers import Mixup, do_mixup
-from criterians import ImprovedPANNsLoss
+from criterians import ImprovedPANNsLoss, ImprovedFocalLoss
 
 
 # ----------------- Create Folds -----------------
@@ -151,7 +151,7 @@ def train_fold(args):
 
     valid_dataset = SedDataset(
         df=valid_fold,
-        period=args.period,
+        period=args.test_period,
         stride=5,
         audio_transform=None,
         data_path=args.train_data_path,
@@ -160,7 +160,7 @@ def train_fold(args):
 
     test_dataset = SedDataset(
         df=sub_df,
-        period=args.period,
+        period=args.test_period,
         stride=5,
         audio_transform=None,
         data_path=args.test_data_path,
@@ -202,7 +202,8 @@ def train_fold(args):
 
     # if args.is_train:
     # criterion = PANNsLoss()
-    criterion = ImprovedPANNsLoss(**args.loss_param)
+    # criterion = ImprovedPANNsLoss(**args.loss_param)
+    criterion = ImprovedFocalLoss(**args.loss_param)
     # criterion = ImprovedFocalLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     # num_train_steps = int(len(train_loader) * args.epochs)

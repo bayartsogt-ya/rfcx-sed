@@ -42,6 +42,21 @@ class FocalLoss(nn.Module):
         return loss.mean()
 
 
+class SimplerFocalLoss(nn.Modeule):
+    def __init__(self, alpha=0.25, gamma=2):
+        super().__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+
+    def forward(self, logits, targets):
+        loss_fct = nn.BCEWithLogitsLoss(reduction='none')
+        bce_loss = loss_fct(logits, targets)
+        probas = torch.sigmoid(logits)
+        loss = torch.where(targets >= 0.5, self.alpha * (1. - probas)
+                           ** self.gamma * bce_loss, probas**self.gamma * bce_loss)
+        return loss.mean()
+
+
 class ImprovedPANNsLoss(nn.Module):
     def __init__(self,
                  output_key="logit",
@@ -81,7 +96,8 @@ class ImprovedFocalLoss(nn.Module):
     def __init__(self, weights=[1, 1]):
         super().__init__()
 
-        self.focal = FocalLoss()
+        # self.focal = FocalLoss()
+        self.focal = SimplerFocalLoss()
         self.weights = weights
 
     def forward(self, input, target):

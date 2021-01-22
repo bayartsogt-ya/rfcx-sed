@@ -28,7 +28,7 @@ encoder_params = {
 
 class AudioSEDModel(nn.Module):
     def __init__(self, encoder, sample_rate, window_size, hop_size,
-                 mel_bins, fmin, fmax, classes_num, att_version=1):
+                 mel_bins, fmin, fmax, classes_num, att_version=1, att_activation="sigmoid"):
         super().__init__()
 
         window = 'hann'
@@ -59,9 +59,9 @@ class AudioSEDModel(nn.Module):
             encoder_params[encoder]["features"], 1024, bias=True)
 
         if att_version == 1:
-            self.att_block = AttBlock(1024, classes_num, activation="sigmoid")
+            self.att_block = AttBlock(1024, classes_num, activation=att_activation)
         else:
-            self.att_block = AttBlockV2(1024, classes_num, activation="sigmoid")
+            self.att_block = AttBlockV2(1024, classes_num, activation=att_activation)
 
         self.bn0 = nn.BatchNorm2d(mel_bins)
         self.init_weight()
