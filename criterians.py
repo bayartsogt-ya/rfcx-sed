@@ -42,7 +42,7 @@ class FocalLoss(nn.Module):
         return loss.mean()
 
 
-class SimplerFocalLoss(nn.Modeule):
+class SimplerFocalLoss(nn.Module):
     def __init__(self, alpha=0.25, gamma=2):
         super().__init__()
         self.alpha = alpha
