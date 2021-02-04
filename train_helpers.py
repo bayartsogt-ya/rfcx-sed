@@ -100,6 +100,38 @@ def valid_epoch(args, model, loader, criterion, epoch):
     return scores.avg, losses.avg
 
 
+def post_validate(args, model, loader):
+    model.eval()
+
+    id_list = []
+    targets = []
+    framewise_list = []
+    clipwise_list = []
+    segmentwise_list = []
+
+    with torch.no_grad():
+        for i, sample in enumerate(tqdm(loader)):
+            input = sample["image"].to(args.device)
+            id_list.extend(sample["id"])
+            targets.append(sample["target"])
+
+            out_ = model(input)
+            fw = out_["framewise_output"].cpu().detach().numpy()
+            cw = out_["clipwise_output"].cpu().detach().numpy()
+            sw = out_["segmentwise_output"].cpu().detach().numpy()
+
+            framewise_list.append(fw)
+            clipwise_list.append(cw)
+            segmentwise_list.append(sw)
+
+    framewise_list = np.concatenate(framewise_list, 0)
+    clipwise_list = np.concatenate(clipwise_list, 0)
+    segmentwise_list = np.concatenate(segmentwise_list, 0)
+    targets = np.concatenate(targets, 0)
+
+    return framewise_list, clipwise_list, segmentwise_list, id_list, targets
+
+
 def test_epoch(args, model, loader):
     model.eval()
     pred_list = []
@@ -202,8 +234,8 @@ def train_fold(args):
 
     # if args.is_train:
     # criterion = PANNsLoss()
-    # criterion = ImprovedPANNsLoss(**args.loss_param)
-    criterion = ImprovedFocalLoss(**args.loss_param)
+    criterion = ImprovedPANNsLoss(**args.loss_param)
+    # criterion = ImprovedFocalLoss(**args.loss_param)
     # criterion = ImprovedFocalLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     # num_train_steps = int(len(train_loader) * args.epochs)
@@ -215,7 +247,6 @@ def train_fold(args):
         optimizer, T_0=10, eta_min=1e-8)
 
     # Augmenter
-
     if args.use_mixup:
         mixup_augmenter = Mixup(mixup_alpha=1.)
     else:
